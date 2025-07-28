@@ -1,0 +1,15 @@
+# Folders
+.git/
+.vscode/
+build/
+buildWindows/
+
+# Files
+*.exe
+*.log
+*.obj
+*.o
+
+# OS files
+Thumbs.db
+.DS_Store
