@@ -11,7 +11,7 @@ void player::PropsInit()
 }
 
 player::player(int width, int height, float posX, float posY, float offsetX, float offsetY, float life, float speed, float strenght, std::string name, std::string pgTexture) :
-    character(width, height, posX, posY, offsetX, offsetY, life, speed, strenght, name, pgTexture),
+    character(width, height, posX, posY, offsetX, offsetY, life, speed, strenght, false, name, pgTexture),
 
     Score(0),
     SpeedMod(0),
@@ -91,6 +91,15 @@ player::player(int width, int height, float posX, float posY, float offsetX, flo
     //starting frame
     RunningDown.update(0.0f, 0.0f);
     CurrentFrame = RunningDown.getRect();
+
+    //resetting animations
+    RunningUp.reset();
+    RunningLeft.reset();
+    RunningRight.reset();
+    AttackLeft.reset();
+    AttackRight.reset();
+    AttackUp.reset();
+    AttackDown.reset();
 
     //scaling
     Pg.setScale({ 2.5f, 2.5f });

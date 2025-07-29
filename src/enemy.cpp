@@ -1,7 +1,7 @@
 #include "enemy.hpp"
 
 enemy::enemy(int width, int height, float posX, float posY, float offsetX, float offsetY, float life, float speed, float strenght, std::string name, std::string pgTexture) :
-    character(width, height, posX, posY, offsetX, offsetY, life, speed, strenght, name, pgTexture),
+    character(width, height, posX, posY, offsetX, offsetY, life, speed, strenght, false, name, pgTexture),
     
     MovingSide(0),
 
@@ -56,6 +56,13 @@ enemy::enemy(int width, int height, float posX, float posY, float offsetX, float
     //starting frame
     RunningDown.update(0.0, 0.0);
     CurrentFrame = RunningDown.getRect();
+
+    //resetting animations
+    RunningUp.reset();
+    RunningLeft.reset();
+    RunningRight.reset();
+    AttackLeft.reset();
+    AttackRight.reset();
 
     //scaling
     Pg.setScale({ 2.5f, 2.5f });

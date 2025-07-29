@@ -25,7 +25,7 @@ class character
 {
 public:
     character(int width, int height, float posX, float posY, float offsetX, float offsetY, 
-              float life, float speed, float strenght, 
+              float life, float speed, float strenght, bool flying,
               std::string name, std::string pgTexture);
     virtual ~character() {}
     
@@ -74,6 +74,7 @@ protected:
 
     float Life;
     float Strenght;
+    bool Flying;
 
     float stdSpeed; 
     float SpeedX;

@@ -7,7 +7,9 @@ int main()
     offixAdventure.Run();
 }
 
-//! crash e problemi con animazioni troppo frequenti
-
-//TODO: proiettili che passano sull'acqua
-//TODO: pathfinding
+//for the release:
+    //TODO: pathfinding
+    //TODO: gameover menu
+    //TODO: finish menu (buttons)
+    //TODO: music and sounds
+    //TODO: vector movement

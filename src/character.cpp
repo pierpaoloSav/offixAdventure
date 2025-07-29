@@ -34,12 +34,16 @@ bool character::checkAlive()
         return true;
 }
 
-character::character(int width, int height, float posX, float posY, float offsetX, float offsetY, float life, float speed, float strenght, std::string name, std::string pgTexture):
+character::character(int width, int height, float posX, float posY, float offsetX, float offsetY, 
+                     float life, float speed, float strenght, bool flying, 
+                     std::string name, std::string pgTexture)   :
+
     Width(width), Height(height), 
     PosX(posX), PosY(posY), 
     OffsetX(offsetX), OffsetY(offsetY),
     Life(life), 
     Strenght(strenght),
+    Flying(flying),
     stdSpeed(speed), 
     Name(name),  
 
@@ -161,6 +165,10 @@ void character::update(float deltatime, std::vector<tile*> *collisions)
         Hitbox.setPosition({ PosX , PosY - SpeedY * deltatime });
         for (int i = 0; i < collisions->size(); i++)
         {
+            //for flying obj like bullets
+            if (Flying and !(collisions->at(i))->getSolid()) 
+                continue; 
+
             RectangleShape Hitbox2 = (collisions->at(i))->getHitbox();
             if (checkCollision(Hitbox, Hitbox2)) 
             { 
@@ -185,6 +193,10 @@ void character::update(float deltatime, std::vector<tile*> *collisions)
         Hitbox.setPosition({ PosX , PosY });
         for (int i = 0; i < collisions->size(); i++)
         {
+            //for flying obj like bullets
+            if (Flying and !(collisions->at(i))->getSolid())
+                continue;
+
             RectangleShape Hitbox2 = (collisions->at(i))->getHitbox();
             if (checkCollision(Hitbox, Hitbox2)) 
             { 
@@ -199,6 +211,7 @@ void character::update(float deltatime, std::vector<tile*> *collisions)
             Pg.setPosition(Hitbox.getPosition());
             PosY = Hitbox.getPosition().y;
         }
+        
     if (xColliding || yColliding)
         IsColliding = true;
     else
