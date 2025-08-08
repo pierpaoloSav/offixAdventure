@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 
 #include "game.hpp"
 #include "menu.hpp"
@@ -14,8 +15,20 @@ void game::ClocksInit()
 
 void game::OffixInit()
 {
-    Offix = new player(30, 40, 15*BLOCK_SIZE, 8*BLOCK_SIZE, +1.5f, -9.0f, 3.0f, 0.15f, 1.5f, "PIETRO");
-    Offix->getDamage(0.0f);    //init Hearts
+    //TODO: this values will be standards in player class except the pos
+    Offix = new player(11, 15, 20*BLOCK_SIZE, 10*BLOCK_SIZE, 0, -5.0f, 3.0f, 0.075f, 1.5f, "PIETRO");
+    //init Hearts
+    Offix->getDamage(0.0f);    
+
+    //holder
+    Bullets = Offix->getBullets(); 
+}
+
+void game::TextInit()
+{
+    TextScore.setPosition({ float(38*BLOCK_SIZE*SCALE), float(1*BLOCK_SIZE*SCALE) });
+    TextScore.setFillColor(Color::White);
+    TextScore.setCharacterSize(15.0f*SCALE);
 }
 
 game::game(RenderWindow *window) : 
@@ -33,15 +46,9 @@ game::game(RenderWindow *window) :
 {
     this->ClocksInit();
     this->OffixInit();
+    this->TextInit();
 
-    //holder
-    Bullets = Offix->getBullets(); 
-
-    //text
-    TextScore.setPosition({ 30*BLOCK_SIZE, 1*BLOCK_SIZE });
-    TextScore.setFillColor(Color::White);
-
-    std::cout << "Game started" << std::endl;
+    std::cout << "\nGAME STARTED\n";
 }
 
 game::~game()
@@ -54,14 +61,14 @@ game::~game()
     for (enemy* e : Enemies) { delete e; }
     Enemies.clear();
 
-    std::cout << "Game ended" << std::endl;
+    std::cout << "GAME ENDED\n";
 }
 
 void game::SpawnCollectibles()
 {
     static const int nSpawners = World.getColSpawners()->size();
-    Time colTimer = ColTimer.getElapsedTime();
-    if((int)colTimer.asSeconds() >= ColSpawnTime && nSpawners > FullSpawners)
+    Time colTime = ColTimer.getElapsedTime();
+    if((int)colTime.asSeconds() >= ColSpawnTime && nSpawners > FullSpawners)
     {
         //reset time
         ColTimer.restart();
@@ -101,16 +108,12 @@ void game::SpawnCollectibles()
         //one more spawner filled
         FullSpawners++;
     }
-    else if ((int)colTimer.asSeconds() == 11) { ColTimer.restart(); }
+    else if ((int)colTime.asSeconds() == ColSpawnTime) { ColTimer.restart(); }
 }
 
 void game::SpawnEnemies()
 {
-    static const int nSpawners = 5;
-    static const int spawners[nSpawners][2] = {
-        {16, 7}, {12, 15}, {12, 3}, {25, 5}, {30, 3}
-    };  
-
+    static const int nSpawners = World.getEnemySpawners()->size();
     Time enemyTime = EnemyTimer.getElapsedTime();
     if((int)enemyTime.asSeconds() >= EnemySpawnTime)
     {
@@ -120,10 +123,13 @@ void game::SpawnEnemies()
         //random spawner
         int randIndex;
         randIndex = rand()%nSpawners;
+        hut* randTile = World.getEnemySpawners()->at(randIndex);
 
         //spawn
-        Enemies.push_back( new enemy(30, 40, spawners[randIndex][0] * BLOCK_SIZE, spawners[randIndex][1] * BLOCK_SIZE, +1.5f, -9.0f, 3.0f, 0.13f, 3.0f, "ENEMY") );
+        //TODO: this values will be standards in player class except the pos
+        Enemies.push_back( new enemy(11, 15, randTile->getPosX(), randTile->getPosY(), 0, -5, 3.0f, 0.070f, 3.0f, "ENEMY") );
     }
+    else if ((int)enemyTime.asSeconds() == EnemySpawnTime) { EnemyTimer.restart(); }
 }
 
 void game::CheckCollectibles()
@@ -219,6 +225,7 @@ void game::UpdateCombat(float deltatime)
         }
     }
 }
+    
 
 void game::UpdateCollectibles()
 {
@@ -230,7 +237,7 @@ void game::UpdateCollectibles()
     TextScore.setString(String("x") + String( std::to_string(Offix->getScore()) ));
 }
 
-void game::Update()
+int game::Update()
 {
     //DELTA TIME FOR FRAME INDIPENDENT MOVEMENT 
     sf::Time timer = DeltaTimeClock.restart();
@@ -240,27 +247,70 @@ void game::Update()
     while (const std::optional event = Window->pollEvent())
     {
         //window closed
-        if (event->is<Event::Closed>()) { Shutting = 1; }
+        if (event->is<Event::Closed>()) { Window->close(); }
  
-        //TOGGLE_HITBOX 
+        //window resized
+        if (event->is<Event::Resized>()) 
+        {
+            //new dimensions
+            float newW = Window->getSize().x;
+            float newH = Window->getSize().y;
+            if (newW < WIDTH || newH < HEIGHT) 
+            {
+                newW = std::max(newW, float(WIDTH));
+                newH = std::max(newH, float(HEIGHT));
+                Window->setSize(Vector2u(newW, newH));
+            }
+
+            //set scale
+            if (newW/WIDTH < newH/HEIGHT)
+                SCALE = newW/WIDTH;
+            else
+                SCALE = newH/HEIGHT;
+
+            //set borders
+            LEFTBORDER = BLOCK_SIZE*SCALE;
+            RIGHTBORDER = WIDTH*SCALE - LEFTBORDER;
+            UPBORDER = BLOCK_SIZE*SCALE;
+            DOWNBORDER = HEIGHT*SCALE - UPBORDER;
+
+            //set view    
+            FloatRect visible({(WIDTH*SCALE-newW)/2, (HEIGHT*SCALE-newH)/2}, {newW, newH}); 
+            Window->setView(View(visible));
+
+            //updating objects
+                //characters
+                Offix->setScale(SCALE);
+                for (enemy *e : Enemies) { e->setScale(SCALE); }
+                //map
+                World.scaleMap(SCALE);
+                //collectibles
+                for (collectible *c : Collectibles) { c->setScale(SCALE); }
+                //text
+                this->TextInit();
+        }
+
+        //key pressed
         if (auto *key = event->getIf<Event::KeyPressed>())
+        {
             if (key->scancode == Keyboard::Scancode::T) { toggleHitbox = !toggleHitbox; }
+            
+            if (key->scancode == Keyboard::Scancode::Escape) { return 3; }
+        }
     }      
 
     //---------------GAME_UPDATING--------------//
-    if(!Offix->checkAlive()) { Running = 0; }
-    if (Running)
-    {
-        this->UpdatePlayer(deltaTime);
+    if(!Offix->checkAlive()) { return 4; }
+    
+    this->UpdatePlayer(deltaTime);
 
-        this->UpdateEnemies(deltaTime);
+    this->UpdateEnemies(deltaTime);
 
-        this->UpdateCombat(deltaTime);
+    this->UpdateCombat(deltaTime);
 
-        this->UpdateCollectibles();
-    }
-    else //TODO: pausa con pulsante che quando viene clickato fa tornare al menu
-        std::cout << "\nGAME OVER\n";
+    this->UpdateCollectibles();
+
+    return 0;
 }
 
 void game::Render()
@@ -278,9 +328,6 @@ void game::Render()
 
         for (bullet* b : *Bullets)
             b->drawCharacter(Window);
-
-        for (tile* h : *Offix->getHearts()) 
-            h->drawTile(Window);
         
         for (enemy* e : Enemies) 
             e->drawCharacter(Window);

@@ -13,8 +13,10 @@ public:
     ~map();
 
     std::vector<tile*>* getCollisions();
+    std::vector<hut*>* getEnemySpawners();
     std::vector<colSpawner*>* getColSpawners();
 
+    void scaleMap(float scale);
     void drawMap(RenderWindow *window);
 
 private:
@@ -26,6 +28,8 @@ private:
     tile *Tmap[MAP_HEIGHT][MAP_WIDHT];
 
     std::vector<tile*> Collisions; 
+
+    std::vector<hut*> EnemySpawners;
 
     std::vector<colSpawner*> ColSpawners;
 };

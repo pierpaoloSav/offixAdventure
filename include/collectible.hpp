@@ -16,6 +16,7 @@ public:
     //setters
     void setPosition(float posX, float posY);
     void setSpawnerIndex(int index);
+    void setScale(float scale);
 
     //getters
     float getPosX();
@@ -35,6 +36,7 @@ protected:
     int Height;
     float PosX;
     float PosY;
+    float Scale;
 
     int SpawnerIndex;
 
@@ -46,35 +48,31 @@ protected:
 class hamburger : public collectible
 {    
 public:
-    hamburger(float posX, float posY, int width = 33, int height = 36, std::string texture = "../res/hamburger.png");
+    hamburger(float posX, float posY, int width = BLOCK_SIZE, int height = BLOCK_SIZE, std::string texture = "../res/hamburger.png");
 
-    bool checkTaked(player *pg);    //derived
+    bool checkTaked(player *pg) override;
 };
 
 class chili : public collectible
 {
 public:
-    chili(float posX, float posY, int width = 30, int height = 40, std::string texture = "../res/chili.png");
+    chili(float posX, float posY, int width = BLOCK_SIZE, int height = BLOCK_SIZE, std::string texture = "../res/chili.png");
 
-    bool checkTaked(player *pg);    //derived
+    bool checkTaked(player *pg) override;
 };
 
 class pizza : public collectible
 {
 public:
-    pizza(float posX, float posY, int width = 40, int height = 40, std::string texture = "../res/pizza.png");
+    pizza(float posX, float posY, int width = BLOCK_SIZE, int height = BLOCK_SIZE, std::string texture = "../res/pizza.png");
 
-    bool checkTaked(player *pg);    //derived
+    bool checkTaked(player *pg) override;
 };
 
 class shield : public collectible
 {
 public:
-    shield(float posX, float posY, int width = 40, int height = 40, std::string texture = "../res/shield.png");
+    shield(float posX, float posY, int width = BLOCK_SIZE, int height = BLOCK_SIZE, std::string texture = "../res/shield.png");
 
-    bool checkTaked(player *pg);    //derived
+    bool checkTaked(player *pg) override;
 };
-
-//OTHER IDEAS
-//-BOX GLOVES
-//-SACCU POWER

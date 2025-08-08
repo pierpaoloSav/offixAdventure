@@ -22,9 +22,10 @@ void collectible::HitboxInit()
 collectible::collectible(float posX, float posY, int width, int height, std::string texture) :
     PosX(posX),
     PosY(posY),
-
+    
     Width(width),
     Height(height),
+    Scale(1.0f),
 
     SpawnerIndex(),
 
@@ -36,6 +37,7 @@ collectible::collectible(float posX, float posY, int width, int height, std::str
 
     this->ColInit();
     this->HitboxInit();
+    this->setScale(SCALE);
 }
 
 bool collectible::checkTaked(player *pg)
@@ -55,6 +57,26 @@ void collectible::setPosition(float posX, float posY)
 void collectible::setSpawnerIndex(int index)
 {
     SpawnerIndex = index;
+}
+
+void collectible::setScale(float scale)
+{
+    Width /= Scale;
+    Height /= Scale;
+    PosX /= Scale;
+    PosY /= Scale;
+
+    //set the Scale
+    Scale = scale;
+    Col.setScale(Vector2f{Scale, Scale});
+
+    //reset the position
+    this->setPosition(PosX*Scale, PosY*Scale);
+
+    //reset the dimensions
+    Width *= Scale;
+    Height *= Scale;
+    Hitbox.setSize(Vector2f(Width, Height));
 }
 
 float collectible::getPosX()

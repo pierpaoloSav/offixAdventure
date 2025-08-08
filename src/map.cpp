@@ -57,107 +57,129 @@ void map::mapFilling(std::string mapFile)
             
                 break;
             case 5:
-                Tmap[rows][cols] = new water2(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+                Tmap[rows][cols] = new water1(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
             
                 break;
             case 6:
-                Tmap[rows][cols] = new water3(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+                Tmap[rows][cols] = new water2(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
             
                 break;
             case 7:
-                Tmap[rows][cols] = new water4(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+                Tmap[rows][cols] = new water3(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
             
                 break;
             case 8:
-                Tmap[rows][cols] = new water5(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+                Tmap[rows][cols] = new water4(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
             
                 break;
             case 9:
-                Tmap[rows][cols] = new water6(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+                Tmap[rows][cols] = new water5(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
             
                 break;
             case 10:
-                Tmap[rows][cols] = new water7(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+                Tmap[rows][cols] = new water6(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
             
                 break;
             case 11:
-                Tmap[rows][cols] = new water8(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+                Tmap[rows][cols] = new water7(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
             
                 break;
             case 12:
-                Tmap[rows][cols] = new water9(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+                Tmap[rows][cols] = new water8(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
             
                 break;
             case 13:
-                Tmap[rows][cols] = new water10(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+                Tmap[rows][cols] = new water9(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
             
                 break;
             case 14:
-                Tmap[rows][cols] = new water11(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+                Tmap[rows][cols] = new water10(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
             
                 break;
             case 15:
-                Tmap[rows][cols] = new water12(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+                Tmap[rows][cols] = new water11(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
             
                 break;
             case 16:
+                Tmap[rows][cols] = new water12(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+            
+                break;
+            case 17:
                 Tmap[rows][cols] = new water13(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
 
                 break;
-            case 17:
-                Tmap[rows][cols] = new ship(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
-            
-                break;
             case 18:
+                Tmap[rows][cols] = new hut(cols*BLOCK_SIZE, rows*BLOCK_SIZE);    
+
+                EnemySpawners.push_back(dynamic_cast<hut*>(Tmap[rows][cols]));
+
+                break;
+            case 19:
                 Tmap[rows][cols] = new colSpawner(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
 
                 ColSpawners.push_back(dynamic_cast<colSpawner*>(Tmap[rows][cols]));
 
                 break;
-            case 19:
+            case 20:
                 Tmap[rows][cols] = new rareSpawner(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
 
                 ColSpawners.push_back(dynamic_cast<colSpawner*>(Tmap[rows][cols]));
                 
                 break;
-            case 20:
+            case 21:
                 Tmap[rows][cols] = new path(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
 
                 break;
-            case 21:
+            case 22:
                 Tmap[rows][cols] = new path1(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
 
                 break;
-            case 22:
+            case 23:
                 Tmap[rows][cols] = new path2(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
 
                 break;
-            case 23:
+            case 24:
                 Tmap[rows][cols] = new path3(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
 
                 break;
-            case 24:
+            case 25:
                 Tmap[rows][cols] = new path4(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
 
                 break;
-            case 25:
+            case 26:
                 Tmap[rows][cols] = new path5(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
 
                 break;
-            case 26:
+            case 27:
                 Tmap[rows][cols] = new path6(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
 
                 break;
-            case 27:
+            case 28:
                 Tmap[rows][cols] = new path7(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
 
                 break;
-            case 28:
+            case 29:
                 Tmap[rows][cols] = new path8(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
 
                 break;
-            case 29:
-                Tmap[rows][cols] = new tree(cols*BLOCK_SIZE, rows*BLOCK_SIZE);   
+            case 30:
+                Tmap[rows][cols] = new path9(cols*BLOCK_SIZE, rows*BLOCK_SIZE);
+
+                break;
+            case 31:
+                Tmap[rows][cols] = new path10(cols*BLOCK_SIZE, rows*BLOCK_SIZE);
+
+                break;
+            case 32:
+                Tmap[rows][cols] = new path11(cols*BLOCK_SIZE, rows*BLOCK_SIZE);
+
+                break;
+            case 33:
+                Tmap[rows][cols] = new path12(cols*BLOCK_SIZE, rows*BLOCK_SIZE);
+
+                break;
+            case 34:
+                Tmap[rows][cols] = new tree(cols*BLOCK_SIZE, rows*BLOCK_SIZE);
 
                 break;
             default:
@@ -178,6 +200,17 @@ void map::collisionsInit()
         for (int j = 0; j < MAP_WIDHT; j++)
         {
             if(Tmap[i][j] != nullptr && Tmap[i][j]->getCollision()) { Collisions.push_back(Tmap[i][j]); }
+        }
+    }
+}
+
+void map::scaleMap(float scale)
+{
+    for (int i = 0; i < MAP_HEIGHT; i++)
+    {
+        for (int j = 0; j < MAP_WIDHT; j++)
+        {
+            Tmap[i][j]->setScale(SCALE);
         }
     }
 }
@@ -210,7 +243,12 @@ std::vector<tile*>* map::getCollisions()
     return &Collisions;
 }
 
-std::vector<colSpawner *> *map::getColSpawners()
+std::vector<hut*>* map::getEnemySpawners()
+{
+    return &EnemySpawners;
+}
+
+std::vector<colSpawner*>* map::getColSpawners()
 {
     return &ColSpawners;
 }

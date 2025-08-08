@@ -64,17 +64,14 @@ enemy::enemy(int width, int height, float posX, float posY, float offsetX, float
     AttackLeft.reset();
     AttackRight.reset();
 
-    //scaling
-    Pg.setScale({ 2.5f, 2.5f });
-
     std::cout << std::endl << "Enemy " << Name << " created" << std::endl;
 }
 
 float enemy::attack(character *attacked, float deltatime)
 {
     //player position
-    float pPosX = attacked->getPosX();
-    float pPosY = attacked->getPosY();
+    float pPosX = attacked->getPosX()*Scale;
+    float pPosY = attacked->getPosY()*Scale;
     //distance 
     float distance = pointsDistance( (int)PosX, (int)PosY, (int)pPosX, (int)pPosY);
 
@@ -143,13 +140,13 @@ float enemy::attack(character *attacked, float deltatime)
 void enemy::movement(float deltatime, player* pg)
 {
     //player position
-    float pPosX = pg->getPosX();
-    float pPosY = pg->getPosY();
+    float pPosX = pg->getPosX()*Scale;
+    float pPosY = pg->getPosY()*Scale;
 
     //distance 
     float distance = pointsDistance( (int)PosX, (int)PosY, (int)pPosX, (int)pPosY);
 
-    if (distance <= BLOCK_SIZE*2 && distance >= Width) //near
+    if (distance <= BLOCK_SIZE*SCALE*2 && distance >= Width) //near
     {
         //follow the player directly
         if (pPosY > PosY)

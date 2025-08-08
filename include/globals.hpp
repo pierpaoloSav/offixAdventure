@@ -4,18 +4,20 @@
 using namespace sf;
 
 //map dimension variables 
-const int WIDTH = 1280;
-const int HEIGHT = 720;
+const uint WIDTH = 640;
+const uint HEIGHT = 360;
 
-const int LEFTBORDER = 40;
-const int RIGHTBORDER = WIDTH - 40;
-const int UPBORDER = 40;
-const int DOWNBORDER = HEIGHT - 40;
+extern uint SCALE;
 
-const int MAP_HEIGHT = 18;
-const int MAP_WIDHT = 32;
-const int BLOCK_SIZE = 40;
-const int DIAGONAL = 57;
+const uint BLOCK_SIZE = 16;
+const uint MAP_HEIGHT = 23;
+const uint MAP_WIDHT = 40;
+const uint DIAGONAL = 57;
+
+extern uint LEFTBORDER;
+extern uint RIGHTBORDER;
+extern uint UPBORDER;
+extern uint DOWNBORDER;
 
 //base function to check collisions between rectangles 
 bool checkCollision(RectangleShape &rect1, RectangleShape &rect2);

@@ -10,7 +10,7 @@ class bullet : public character
 {
 public: 
     bullet(Direction lastDirection, float posX, float posY, float strenght, bool flying = true,
-           int width = 15, int height = 5, float offsetX = 0, float offsetY = 0, 
+           int width = 5, int height = 5, float offsetX = 0, float offsetY = 0, 
            float life = 1, float speed = 0.4, 
            std::string name = "", std::string pgTexture = "../res/bullet.png");
     ~bullet();

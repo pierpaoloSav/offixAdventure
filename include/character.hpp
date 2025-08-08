@@ -37,7 +37,6 @@ public:
     void rotate(float angle);
 
     //combat
-    virtual float attack(character* attacked);
     virtual void getDamage(float damage);
     bool checkAlive();
 
@@ -49,6 +48,7 @@ public:
     //setters
     void setPosition(float posX, float posY);
     void setTexture(std::string texture);
+    void setScale(float scale);
 
     //getters
     float getPosX();
@@ -71,6 +71,7 @@ protected:
 
     int Width;
     int Height;
+    float Scale;
 
     float Life;
     float Strenght;

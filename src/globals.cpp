@@ -1,6 +1,13 @@
 #include "globals.hpp"
 #include <math.h>
 
+uint SCALE = 2;
+
+uint LEFTBORDER = BLOCK_SIZE*SCALE ;
+uint RIGHTBORDER = WIDTH*SCALE -LEFTBORDER;
+uint UPBORDER = BLOCK_SIZE*SCALE;
+uint DOWNBORDER = HEIGHT*SCALE -UPBORDER;
+
 bool checkCollision(RectangleShape &rect1, RectangleShape &rect2)
 {
     if(rect1.getPosition().x  + rect1.getSize().x > rect2.getPosition().x  && 

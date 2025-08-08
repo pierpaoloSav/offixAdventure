@@ -4,6 +4,7 @@
 
 #include "gameState.hpp"
 #include "globals.hpp"
+#include "button.hpp"
 
 using namespace sf;
 
@@ -13,13 +14,16 @@ public:
     menu(RenderWindow *window);
     ~menu();
 
+    int Update() override;
+    void Render() override;
+
 private:
-    void Update();
-    void Render();
+    void BackgroundInit();
 
 private:
     Texture BackgroundTex;
     Sprite Background;
-};
 
-//TODO: pulsanti 
+    button ButtonPlay;
+    button ButtonRule;
+};

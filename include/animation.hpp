@@ -16,6 +16,10 @@ struct frame
     IntRect Rect;
 };
 
+/*
+    Always restart an animation before using it for the first time
+*/
+
 class animation
 {
 public:

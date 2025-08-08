@@ -17,19 +17,22 @@ class game : public gameState
 public:
     game(RenderWindow *window);
     ~game();
+
+    int Update() override;
+    void Render() override;
 private:
     void ClocksInit();
     void OffixInit();
+    void TextInit();
 
     void SpawnCollectibles();
     void SpawnEnemies();
     void CheckCollectibles();
-    void Update();
-        void UpdatePlayer(float deltatime);
-        void UpdateEnemies(float deltatime);
-        void UpdateCombat(float deltatime);
-        void UpdateCollectibles();
-    void Render();
+    
+    void UpdatePlayer(float deltatime);
+    void UpdateEnemies(float deltatime);
+    void UpdateCombat(float deltatime);
+    void UpdateCollectibles();
 
 private:  
     Font Roboto;

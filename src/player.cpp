@@ -6,8 +6,8 @@ void player::PropsInit()
 {
     //shield 
     if(!ShieldTex.loadFromFile("../res/shield.png")) { std::cerr << "ERROR: can't load the texture"; }
-    Shield.setPosition( { PosX, PosY+10 } );
-    Shield.setScale({ 0.8f , 0.8f });
+    Shield.setPosition( { PosX-(2*Scale), PosY+(5*Scale) } );
+    Shield.setScale({ float(Scale), float(Scale) });
 }
 
 player::player(int width, int height, float posX, float posY, float offsetX, float offsetY, float life, float speed, float strenght, std::string name, std::string pgTexture) :
@@ -100,9 +100,6 @@ player::player(int width, int height, float posX, float posY, float offsetX, flo
     AttackRight.reset();
     AttackUp.reset();
     AttackDown.reset();
-
-    //scaling
-    Pg.setScale({ 2.5f, 2.5f });
 
     this->PropsInit();
 
@@ -231,7 +228,7 @@ void player::attack(float deltatime)
             Cooldown.restart();
 
             //result
-            Bullets.push_back(new bullet(attackDirection, PosX+(Width/2), PosY+(Height/2), Strenght));
+            Bullets.push_back(new bullet(attackDirection, (PosX+(Width/2))/Scale, (PosY+(Height/2))/Scale, Strenght));
             attackDirection = NONE;
         }
 
@@ -292,24 +289,24 @@ void player::hearts(std::vector<tile *>& hearts)
 {
     float life = Life;
 
-    for (tile* h : hearts) { delete h; }
-    hearts.clear();
+    for (tile* h : Hearts) { delete h; }
+    Hearts.clear();
 
     //full hearts
     while (life >= 1.0f)
     { 
-        hearts.push_back( new fullHeart((MAP_WIDHT-hearts.size()-1)*BLOCK_SIZE, 0.0f) ); 
+        Hearts.push_back( new fullHeart((MAP_WIDHT-Hearts.size()-1)*BLOCK_SIZE, 0.0f) ); 
 
         life -= 1.0f;
     }
 
     //half hearts
     if (life == 0.5) 
-        hearts.push_back( new halfHeart((MAP_WIDHT-hearts.size()-1)*BLOCK_SIZE, 0.0f) ); 
+        Hearts.push_back( new halfHeart((MAP_WIDHT-Hearts.size()-1)*BLOCK_SIZE, 0.0f) ); 
 
     //empty hearts
-    while (hearts.size() != 3)
-        hearts.push_back( new heart((MAP_WIDHT-hearts.size()-1)*BLOCK_SIZE, 0.0f) ); 
+    while (Hearts.size() != 3)
+        Hearts.push_back( new heart((MAP_WIDHT-Hearts.size()-1)*BLOCK_SIZE, 0.0f) ); 
 }
 
 void player::moveForward()
@@ -408,42 +405,15 @@ void player::movement(float deltatime)
 
 void player::drawProps(RenderWindow *window)
 {
-    if (ShieldModTime > 0.0f) 
+    //shield
+    if (ShieldModTime > 0.0f)
     {  
-        Shield.setPosition( { PosX, PosY+10 } );
+        Shield.setPosition( { PosX-(2*Scale), PosY+(5*Scale) } );
+        Shield.setScale({ float(Scale), float(Scale) });
         window->draw(Shield); 
     }
+
+    //hearts
+    for (tile* h : Hearts) { h->setScale(Scale); }
+    for (tile* h : Hearts) { h->drawTile(window); }
 }
-
-//BALD GUY INTRECTS
-/*RunningUp(3.2f,
-    {
-        frame(2.4f, IntRect({ 690, 285 }, { 230, 280 })),
-        frame(1.6f, IntRect({ 460, 285 }, { 230, 280 })),
-        frame(0.8f, IntRect({ 230, 285 }, { 230, 280 })),
-        frame(0.0f, IntRect({ 0, 285 }, { 230, 280 })),
-    }),
-
-    RunningDown(3.2f,
-    {
-        frame(2.4f, IntRect({ 690, 0 }, { 230, 280 })),
-        frame(1.6f, IntRect({ 460, 0 }, { 230, 280 })),
-        frame(0.8f, IntRect({ 230, 0 }, { 230, 280 })),
-        frame(0.0f, IntRect({ 0, 0 }, { 230, 280 })),
-    }),
-
-    RunningLeft(3.2f,
-    {
-        frame(2.4f, IntRect({ 690, 560 }, { 230, 275 })),
-        frame(1.6f, IntRect({ 460, 560 }, { 230, 275 })),
-        frame(0.8f, IntRect({ 230, 560 }, { 230, 275 })),
-        frame(0.0f, IntRect({ 0, 560 }, { 230, 275 })),
-    }),
-
-    RunningRight(3.2f,
-    {
-        frame(2.4f, IntRect({ 690, 850 }, { 230, 280 })),
-        frame(1.6f, IntRect({ 460, 850 }, { 230, 280 })),
-        frame(0.8f, IntRect({ 230, 850 }, { 230, 280 })),
-        frame(0.0f, IntRect({ 0, 850 }, { 230, 280 })),
-    })*/

@@ -6,6 +6,8 @@
 #include "gameState.hpp"
 #include "menu.hpp"
 #include "game.hpp"
+#include "pauseMenu.hpp"
+#include "gameOverMenu.hpp"
 #include "globals.hpp"
 
 using namespace sf;
@@ -26,5 +28,5 @@ private:
     std::stack<gameState*> States;
     RenderWindow Window;
 
-    bool Gaming;
+    int NextState;
 };

@@ -30,14 +30,14 @@ public:
     void modifiersUpdate();
 
     //combat    
-    void getDamage(float damage);
+    void getDamage(float damage) override;
     void attack(float deltatime);
 
     //movement  
-    void moveForward();
-    void moveLeft();
-    void moveRight();
-    void moveBack();
+    void moveForward() override;
+    void moveLeft() override;
+    void moveRight() override;
+    void moveBack() override;
 
     void movement(float deltatime);
 

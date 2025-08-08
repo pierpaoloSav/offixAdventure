@@ -1,9 +1,9 @@
 #include "engine.hpp"
 
 engine::engine() :
-    Window(VideoMode({ WIDTH, HEIGHT }), "Offix Adventure", Style::Titlebar | Style::Close),
+    Window(VideoMode({ WIDTH*2, HEIGHT*2 }), "Offix Adventure"),
 
-    Gaming(0)
+    NextState(0)
 {
     Window.setFramerateLimit(360);
 
@@ -24,20 +24,34 @@ engine::~engine()
 
 void engine::Run()
 {
-    while(!States.top()->isShutting())
+    while(Window.isOpen())
     {
-        if (!States.top()->isRunning())
+        switch (NextState)
         {
+        case 1:
             this->popState();
-
-            if (Gaming)
-                this->pushState(new menu(&Window));
-            else
-                this->pushState(new game(&Window));
-            Gaming = !Gaming;
+            this->pushState(new menu(&Window));
+            break;
+        case 2:
+            this->popState();
+            this->pushState(new game(&Window));
+            break;
+        case 3:
+            this->pushState(new pauseMenu(&Window));
+            break;
+        case 4:
+            this->popState();
+            this->pushState(new gameOverMenu(&Window));
+            break;
+        case 5:
+            this->popState();
+            break;
+        default:
+            break;
         }
-
-        States.top()->Loop();
+        
+        NextState = States.top()->Update();
+        States.top()->Render();
     }
 }
 

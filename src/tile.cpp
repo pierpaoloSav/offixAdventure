@@ -28,6 +28,7 @@ tile::tile(float posX, float posY, int width, int height, bool collision, bool s
 
     Width(width),
     Height(height),
+    Scale(1.0f),
 
     Collision(collision),
     Solid(solid),
@@ -40,6 +41,7 @@ tile::tile(float posX, float posY, int width, int height, bool collision, bool s
 
     this->TileInit();
     this->HitboxInit();
+    this->setScale(SCALE);
 }
 
 void tile::setPosition(float posX, float posY)
@@ -51,14 +53,34 @@ void tile::setPosition(float posX, float posY)
     Hitbox.setPosition({ PosX, PosY });
 }
 
+void tile::setScale(float scale)
+{
+    Width /= Scale;
+    Height /= Scale;
+    PosX /= Scale;
+    PosY /= Scale;
+
+    //set the Scale
+    Scale = scale;
+    Tile.setScale(Vector2f{Scale, Scale});
+
+    //reset the position
+    this->setPosition(PosX*Scale, PosY*Scale);
+
+    //reset the dimensions
+    Width *= Scale;
+    Height *= Scale;
+    Hitbox.setSize(Vector2f(Width, Height));
+}
+
 float tile::getPosX()
 {
-    return PosX;
+    return PosX/Scale;
 }
 
 float tile::getPosY()
 {
-    return PosY;
+    return PosY/Scale;
 }
 
 bool tile::getCollision()
@@ -104,6 +126,11 @@ rock3::rock3(float posX, float posY, int width, int height, bool collision, bool
 }
 
 water::water(float posX, float posY, int width, int height, bool collision, bool solid, std::string texture) :
+    tile(posX, posY, width, height, collision, solid, texture)
+{
+}
+
+water1::water1(float posX, float posY, int width, int height, bool collision, bool solid, std::string texture) :
     tile(posX, posY, width, height, collision, solid, texture)
 {
 }
@@ -168,7 +195,7 @@ water13::water13(float posX, float posY, int width, int height, bool collision, 
 {
 }
 
-ship::ship(float posX, float posY, int width, int height, bool collision, bool solid, std::string texture) :
+hut::hut(float posX, float posY, int width, int height, bool collision, bool solid, std::string texture) :
     tile(posX, posY, width, height, collision, solid, texture)
 {
 }
@@ -245,6 +272,26 @@ path7::path7(float posX, float posY, int width, int height, bool collision, bool
 }
 
 path8::path8(float posX, float posY, int width, int height, bool collision, bool solid, std::string texture) :
+    tile(posX, posY, width, height, collision, solid, texture)
+{
+}
+
+path9::path9(float posX, float posY, int width, int height, bool collision, bool solid, std::string texture) :
+    tile(posX, posY, width, height, collision, solid, texture)
+{
+}
+
+path10::path10(float posX, float posY, int width, int height, bool collision, bool solid, std::string texture) :
+    tile(posX, posY, width, height, collision, solid, texture)
+{
+}
+
+path11::path11(float posX, float posY, int width, int height, bool collision, bool solid, std::string texture) :
+    tile(posX, posY, width, height, collision, solid, texture)
+{
+}
+
+path12::path12(float posX, float posY, int width, int height, bool collision, bool solid, std::string texture) :
     tile(posX, posY, width, height, collision, solid, texture)
 {
 }

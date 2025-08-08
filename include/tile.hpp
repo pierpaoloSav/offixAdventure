@@ -14,6 +14,7 @@ public:
     
     //setters
     void setPosition(float posX, float posY);
+    void setScale(float scale);
 
     //getters
     float getPosX();
@@ -33,6 +34,7 @@ protected:
     float PosY;
     int Width;
     int Height;
+    float Scale;
     bool Collision;
     bool Solid;
 
@@ -69,6 +71,12 @@ class water : public tile
 {
 public:
     water(float posX = 0, float posY = 0, int width = BLOCK_SIZE, int height = BLOCK_SIZE, bool collision = 1, bool solid = 0, std::string texture = "../res/water.png");
+};
+
+class water1 : public tile
+{
+public:
+    water1(float posX = 0, float posY = 0, int width = BLOCK_SIZE, int height = BLOCK_SIZE, bool collision = 1, bool solid = 0, std::string texture = "../res/water1.png");
 };
 
 class water2 : public tile
@@ -143,10 +151,10 @@ public:
     water13(float posX = 0, float posY = 0, int width = BLOCK_SIZE, int height = BLOCK_SIZE, bool collision = 1, bool solid = 0, std::string texture = "../res/water13.png");
 };
 
-class ship : public tile
+class hut : public tile
 {
 public:
-    ship(float posX = 0, float posY = 0, int width = BLOCK_SIZE, int height = BLOCK_SIZE, bool collision = 1, bool solid = 0, std::string texture = "../res/ship.png");
+    hut(float posX = 0, float posY = 0, int width = BLOCK_SIZE, int height = BLOCK_SIZE, bool collision = 0, bool solid = 0, std::string texture = "../res/hut.png");
 };
 
 class colSpawner : public tile
@@ -224,6 +232,30 @@ class path8 : public tile
 {
 public:
     path8(float posX = 0, float posY = 0, int width = BLOCK_SIZE, int height = BLOCK_SIZE, bool collision = 0, bool solid = 0, std::string texture = "../res/path8.png");
+};
+
+class path9 : public tile 
+{
+public:
+    path9(float posX = 0, float posY = 0, int width = BLOCK_SIZE, int height = BLOCK_SIZE, bool collision = 0, bool solid = 0, std::string texture = "../res/path9.png");
+};
+
+class path10 : public tile 
+{
+public:
+    path10(float posX = 0, float posY = 0, int width = BLOCK_SIZE, int height = BLOCK_SIZE, bool collision = 0, bool solid = 0, std::string texture = "../res/path10.png");
+};
+
+class path11 : public tile 
+{
+public:
+    path11(float posX = 0, float posY = 0, int width = BLOCK_SIZE, int height = BLOCK_SIZE, bool collision = 0, bool solid = 0, std::string texture = "../res/path11.png");
+};
+
+class path12 : public tile 
+{
+public:
+    path12(float posX = 0, float posY = 0, int width = BLOCK_SIZE, int height = BLOCK_SIZE, bool collision = 0, bool solid = 0, std::string texture = "../res/path12.png");
 };
 
 class tree : public tile 

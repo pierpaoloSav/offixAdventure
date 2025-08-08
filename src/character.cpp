@@ -19,10 +19,10 @@ void character::PgInit()
 void character::HitboxInit()
 {
     //setting the Hitbox
-    Hitbox.setSize(sf::Vector2f(Width, Height));
+    Hitbox.setSize(Vector2f(Width, Height));
     Hitbox.setPosition({ PosX, PosY });
-    Hitbox.setFillColor(sf::Color::Transparent);
-    Hitbox.setOutlineColor(sf::Color::Blue);
+    Hitbox.setFillColor(Color::Transparent);
+    Hitbox.setOutlineColor(Color::Blue);
     Hitbox.setOutlineThickness(1.0);
 }
 
@@ -38,7 +38,7 @@ character::character(int width, int height, float posX, float posY, float offset
                      float life, float speed, float strenght, bool flying, 
                      std::string name, std::string pgTexture)   :
 
-    Width(width), Height(height), 
+    Width(width), Height(height), Scale(1.0f),
     PosX(posX), PosY(posY), 
     OffsetX(offsetX), OffsetY(offsetY),
     Life(life), 
@@ -61,6 +61,7 @@ character::character(int width, int height, float posX, float posY, float offset
     
     this->PgInit();
     this->HitboxInit();
+    this->setScale(SCALE);
 }
 
 
@@ -78,14 +79,44 @@ void character::setTexture(std::string texture)
     Pg.setTexture(PgTexture);
 }
 
+void character::setScale(float scale)
+{
+    Width /= Scale;
+    Height /= Scale;
+    PosX /= Scale;
+    PosY /= Scale;
+    stdSpeed /= Scale;
+    OffsetX /= Scale;
+    OffsetY /= Scale;
+
+    //set the Scale
+    Scale = scale;
+    Pg.setScale(Vector2f{Scale, Scale});
+
+    //reset position
+    this->setPosition(PosX*Scale, PosY*Scale);
+
+    //reset the dimensions
+    Width *= Scale;
+    Height *= Scale;
+    Hitbox.setSize(Vector2f(Width, Height));
+
+    //set the speed
+    stdSpeed *= Scale;
+
+    //set the offset
+    OffsetX *= Scale;
+    OffsetY *= Scale;
+}
+
 float character::getPosX()
 {
-    return PosX;
+    return PosX/Scale;
 }
 
 float character::getPosY()
 {
-    return PosY;
+    return PosY/Scale;
 }
 
 RectangleShape &character::getHitbox()
@@ -136,11 +167,6 @@ void character::rotate(float angle)
     Hitbox.rotate(a);
 }
 
-float character::attack(character *attacked)
-{
-    return Strenght;
-}
-
 void character::getDamage(float damage)
 {
     Life -= damage;
@@ -155,67 +181,72 @@ void character::update(float deltatime, std::vector<tile*> *collisions)
     PosX += SpeedX * deltatime;
     PosY += SpeedY * deltatime;
 
-    bool xColliding = false;
-    bool yColliding = false;
-    //X collision check
-        //Border
-        if (PosX < LEFTBORDER) { PosX = LEFTBORDER; xColliding = true; }
-        if (PosX > RIGHTBORDER - Width) { PosX = RIGHTBORDER - Width; xColliding = true; }
-        //objs
-        Hitbox.setPosition({ PosX , PosY - SpeedY * deltatime });
-        for (int i = 0; i < collisions->size(); i++)
-        {
-            //for flying obj like bullets
-            if (Flying and !(collisions->at(i))->getSolid()) 
-                continue; 
+    if (collisions)
+    {
+        bool xColliding = false;
+        bool yColliding = false;
+        //X collision check
+            //Border
+            if (PosX < LEFTBORDER) { PosX = LEFTBORDER; xColliding = true; }
+            if (PosX > RIGHTBORDER - Width) { PosX = RIGHTBORDER - Width; xColliding = true; }
+            //objs
+            Hitbox.setPosition({ PosX , PosY - SpeedY * deltatime });
+            for (int i = 0; i < collisions->size(); i++)
+            {
+                //for flying obj like bullets
+                if (Flying and !(collisions->at(i))->getSolid()) 
+                    continue; 
 
-            RectangleShape Hitbox2 = (collisions->at(i))->getHitbox();
-            if (checkCollision(Hitbox, Hitbox2)) 
-            { 
-                xColliding = true;
+                RectangleShape Hitbox2 = (collisions->at(i))->getHitbox();
+                if (checkCollision(Hitbox, Hitbox2)) 
+                { 
+                    xColliding = true;
 
-                if(SpeedX > 0) //right
-                    Hitbox.setPosition({ Hitbox2.getPosition().x - Hitbox.getSize().x, Hitbox.getPosition().y });
-                if(SpeedX < 0) //left
-                    Hitbox.setPosition({ Hitbox2.getPosition().x + Hitbox2.getSize().x, Hitbox.getPosition().y });
+                    if(SpeedX > 0) //right
+                        Hitbox.setPosition({ Hitbox2.getPosition().x - Hitbox.getSize().x, Hitbox.getPosition().y });
+                    if(SpeedX < 0) //left
+                        Hitbox.setPosition({ Hitbox2.getPosition().x + Hitbox2.getSize().x, Hitbox.getPosition().y });
+                }
+
+                Pg.setPosition(Hitbox.getPosition());
+                PosX = Hitbox.getPosition().x;
             }
+            
 
-            Pg.setPosition(Hitbox.getPosition());
-            PosX = Hitbox.getPosition().x;
-        }
-        
+        //Y collision check
+            //Border
+            if (PosY < UPBORDER) { PosY = UPBORDER; yColliding = true; }
+            if (PosY > DOWNBORDER - Height) { PosY = DOWNBORDER - Height; yColliding = true; }
+            //objs
+            Hitbox.setPosition({ PosX , PosY });
+            for (int i = 0; i < collisions->size(); i++)
+            {
+                //for flying obj like bullets
+                if (Flying and !(collisions->at(i))->getSolid())
+                    continue;
 
-    //Y collision check
-        //Border
-        if (PosY < UPBORDER) { PosY = UPBORDER; yColliding = true; }
-        if (PosY > DOWNBORDER - Height) { PosY = DOWNBORDER - Height; yColliding = true; }
-        //objs
-        Hitbox.setPosition({ PosX , PosY });
-        for (int i = 0; i < collisions->size(); i++)
-        {
-            //for flying obj like bullets
-            if (Flying and !(collisions->at(i))->getSolid())
-                continue;
+                RectangleShape Hitbox2 = (collisions->at(i))->getHitbox();
+                if (checkCollision(Hitbox, Hitbox2)) 
+                { 
+                    yColliding = true;
 
-            RectangleShape Hitbox2 = (collisions->at(i))->getHitbox();
-            if (checkCollision(Hitbox, Hitbox2)) 
-            { 
-                yColliding = true;
+                    if(SpeedY < 0) //up
+                        Hitbox.setPosition({ Hitbox.getPosition().x, Hitbox2.getPosition().y + Hitbox2.getSize().y });
+                    if(SpeedY > 0) //down
+                        Hitbox.setPosition({ Hitbox.getPosition().x, Hitbox2.getPosition().y - Hitbox.getSize().y });
+                }
 
-                if(SpeedY < 0) //up
-                    Hitbox.setPosition({ Hitbox.getPosition().x, Hitbox2.getPosition().y + Hitbox2.getSize().y });
-                if(SpeedY > 0) //down
-                    Hitbox.setPosition({ Hitbox.getPosition().x, Hitbox2.getPosition().y - Hitbox.getSize().y });
+                Pg.setPosition(Hitbox.getPosition());
+                PosY = Hitbox.getPosition().y;
             }
+            
+        if (xColliding || yColliding)
+            IsColliding = true;
+        else
+            IsColliding = false;
+    }
 
-            Pg.setPosition(Hitbox.getPosition());
-            PosY = Hitbox.getPosition().y;
-        }
-        
-    if (xColliding || yColliding)
-        IsColliding = true;
-    else
-        IsColliding = false;
+    
 
     //offset
     Pg.move({ OffsetX, OffsetY });
